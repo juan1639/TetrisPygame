@@ -42,14 +42,22 @@ class Fondo:
 		for i in range(filas - 1, 0, -1):
 			matrizLinea = game.matrizFondo.matriz[i]
 
-			contador_cols = 0
+			hasta_cuatro = True
 
-			for cols in matrizLinea:
-				if cols.valor != 0:
-					contador_cols += 1
+			while (hasta_cuatro):
+				contador_cols = 0
 
-			if contador_cols == 14:
-				game.settings.lineas += 1
-				game.actualizar_matrizFondo(i)
-				game.settings.checkeando_matriz = False
+				for cols in matrizLinea:
+					if cols.valor != 0:
+						contador_cols += 1
+
+				if contador_cols == 14:
+					game.settings.lineas += 1
+					game.actualizar_matrizFondo(i)
+
+				else:
+					hasta_cuatro = False
+					break
+
+		game.settings.checkeando_matriz = False
 
