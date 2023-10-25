@@ -1,3 +1,4 @@
+import pygame
 
 # ----------------------------------------------------------------
 # Módulo Settings.py
@@ -21,6 +22,12 @@ class Settings:
 		self.colorMarco = (70, 62, 4)
 		self.colorRastroPieza = (128, 128, 128)
 
+		self.colorMarcadores = {
+			'lineas': (240, 228, 0),
+			'record': (255, 206, 36),
+			'nivel': (255, 130, 47)
+		}
+
 		self.resolucion = (800, 620)
 		self.FPS = 60
 		self.tileX = 30
@@ -31,12 +38,14 @@ class Settings:
 		self.xInicial = 7
 		self.yInicial = 2
 		self.piezas = 'zsljoit'
-		self.GRAVEDAD = 1
+		self.gravedad = 1100
+		self.incremento_dificultad = 10
 		self.checkeando_matriz = False
 		self.otraPieza = True
 
 		self.lineas = 0
 		self.nivel = 1
+		self.record = 0
 
 		self.controles = {
         	'izquierda': False,
@@ -53,6 +62,10 @@ class Settings:
         	'gameOver': False
         }
 
-
-
+		self.sonido = {
+			'gameover': pygame.mixer.Sound("./sonidos/gameover.mp3"),
+			'click': pygame.mixer.Sound("./sonidos/click.mp3"),
+			'linea': pygame.mixer.Sound("./sonidos/disparo.mp3"),
+			'musica': pygame.mixer.Sound("./sonidos/assets_music.ogg")
+		}
 

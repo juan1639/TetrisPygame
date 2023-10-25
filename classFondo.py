@@ -53,6 +53,12 @@ class Fondo:
 
 				if contador_cols == 14:
 					game.settings.lineas += 1
+					game.settings.nivel = int(game.settings.lineas / 7) + 1
+
+					if game.settings.gravedad > 100:
+						game.settings.gravedad -= game.settings.incremento_dificultad
+						print(game.settings.gravedad)
+
 					game.actualizar_matrizFondo(i)
 
 				else:

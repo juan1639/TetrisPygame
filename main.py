@@ -6,6 +6,7 @@ from classPieza import Pieza
 from plantilla import Plantilla
 from matrizFondo import MatrizFondo
 from classFondo import Fondo
+from classMarcadores import Marcadores
 
 # ----------------------------------------------------------------
 # Módulo Principal (main.py)
@@ -14,6 +15,7 @@ from classFondo import Fondo
 class Game:
 	def __init__(self):
 		pygame.init()
+		pygame.mixer.init()
 
 		self.settings = Settings()
 		self.matrizFondo = MatrizFondo(self.settings.columnas, self.settings.filas)
@@ -24,7 +26,14 @@ class Game:
 		self.pantalla = pygame.display.set_mode(self.settings.resolucion)
 		self.reloj = pygame.time.Clock()
 
+		self.lista_textos = pygame.sprite.Group()
+
+		self.settings.sonido['musica'].play(loops=-1)
+		self.settings.sonido['musica'].set_volume(0.6)
+
 		self.instanciar_fondo()
+		self.instanciar_marcadores()
+
 
 
 	def instanciar_fondo(self):
@@ -32,6 +41,19 @@ class Game:
 		for i in range(self.settings.filas):
 			for ii in range(self.settings.columnas):
 				self.matrizFondo.matriz[i][ii] = Fondo(self, ii, i)
+
+
+	def instanciar_marcadores(self):
+
+		x = int(self.settings.resolucion[0] / 1.7)
+		y = 50
+		gapY = 100
+		size = 50
+
+		lineas = Marcadores(self, x, y, size, 'Lineas: ', self.settings.colorMarcadores['lineas'])
+		record = Marcadores(self, x, y + gapY, size, 'Record: ', self.settings.colorMarcadores['record'])
+		nivel = Marcadores(self, x, y + gapY * 2, size, 'Nivel: ', self.settings.colorMarcadores['nivel'])
+		self.lista_textos.add(lineas, record, nivel)
 
 
 
@@ -70,6 +92,8 @@ class Game:
 		Fondo.check_lineDone(self)
 		self.instanciar_pieza()
 
+		self.lista_textos.update()
+
 		pygame.display.flip()
 		self.reloj.tick(self.settings.FPS)
 
@@ -84,6 +108,8 @@ class Game:
 
 		if self.pieza:
 			self.pieza.dibuja()
+
+		self.lista_textos.draw(self.pantalla)
 
 		ancho = self.settings.columnas * self.settings.tileX + 1
 		alto = self.settings.filas * self.settings.tileY + 1
@@ -123,7 +149,7 @@ class Game:
 			self.settings.controles['abajo'] = True
 
 		calculo = pygame.time.get_ticks()
-		if calculo - self.ultimo_update > 999:
+		if calculo - self.ultimo_update > self.settings.gravedad:
 			self.ultimo_update = calculo
 			self.settings.controles['abajo'] = True
 
