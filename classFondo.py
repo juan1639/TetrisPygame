@@ -31,11 +31,25 @@ class Fondo:
 			pygame.draw.rect(self.game.pantalla, colorRastro, (x, y, ancho, alto))
 
 
+	@staticmethod
+	def check_lineDone(game):
 
+		if not game.settings.checkeando_matriz:
+			return
 
+		filas = game.settings.filas
 
+		for i in range(filas - 1, 0, -1):
+			matrizLinea = game.matrizFondo.matriz[i]
 
+			contador_cols = 0
 
+			for cols in matrizLinea:
+				if cols.valor != 0:
+					contador_cols += 1
 
-
+			if contador_cols == 14:
+				game.settings.lineas += 1
+				game.actualizar_matrizFondo(i)
+				game.settings.checkeando_matriz = False
 

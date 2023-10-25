@@ -60,6 +60,7 @@ class Pieza:
 			if self.check_colision():
 				self.y -= 1
 				self.game.settings.otraPieza = True
+				self.game.settings.checkeando_matriz = True
 				self.dejar_rastro()
 
 			self.game.settings.controles['abajo'] = False
@@ -90,6 +91,10 @@ class Pieza:
 				return True
 
 			if colY > self.game.settings.filas - 1:
+				return True
+
+			posMatriz = self.game.matrizFondo.matriz[colY][colX]
+			if posMatriz.valor != 0:
 				return True
 
 		return False

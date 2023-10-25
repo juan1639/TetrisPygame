@@ -32,7 +32,11 @@ class Settings:
 		self.yInicial = 2
 		self.piezas = 'zsljoit'
 		self.GRAVEDAD = 1
-		self.otraPieza = False
+		self.checkeando_matriz = False
+		self.otraPieza = True
+
+		self.lineas = 0
+		self.nivel = 1
 
 		self.controles = {
         	'izquierda': False,

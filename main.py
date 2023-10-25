@@ -53,13 +53,26 @@ class Game:
 			#return self.pieza
 
 
+	def actualizar_matrizFondo(self, fila):
+		# Desplazar los 'rastrosPiezas' hacia abajo al hacer linea...
+		filas = self.settings.filas
+		columnas = self.settings.columnas
+
+		for i in range(fila, 0, -1):
+			for ii in range(columnas):
+				self.matrizFondo.matriz[i][ii].valor = self.matrizFondo.matriz[i - 1][ii].valor
+
+
+
 	def update(self):
 		pygame.display.set_caption(str(int(self.reloj.get_fps())))
 
+		Fondo.check_lineDone(self)
 		self.instanciar_pieza()
 
 		pygame.display.flip()
-		self.reloj.tick(self.settings.FPS) 
+		self.reloj.tick(self.settings.FPS)
+
 
 
 	def draw(self):
@@ -75,6 +88,7 @@ class Game:
 		ancho = self.settings.columnas * self.settings.tileX + 1
 		alto = self.settings.filas * self.settings.tileY + 1
 		pygame.draw.rect(self.pantalla, (0, 0, 0), (0, 0, ancho, alto), 1)
+	
 
 
 	def check_event(self):
@@ -102,16 +116,15 @@ class Game:
 				elif event.key == pygame.K_SPACE and self.settings.estado['enJuego']:
 					self.settings.controles['rotar'] = True
 
-				elif event.key == pygame.K_z and self.settings.estado['enJuego']:
-					calculo = pygame.time.get_ticks()
-					if calculo - self.ultimo_update > 199:
-						self.ultimo_update = calculo
-						self.settings.otraPieza = True
-
 
 		tecla = pygame.key.get_pressed()
 
 		if tecla[pygame.K_DOWN]:
+			self.settings.controles['abajo'] = True
+
+		calculo = pygame.time.get_ticks()
+		if calculo - self.ultimo_update > 999:
+			self.ultimo_update = calculo
 			self.settings.controles['abajo'] = True
 
 
