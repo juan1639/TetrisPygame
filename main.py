@@ -8,6 +8,7 @@ from matrizFondo import MatrizFondo
 from classFondo import Fondo
 from classMarcadores import *
 from classNextpieza import nextPieza
+from classGameover import *
 
 # ----------------------------------------------------------------
 # Módulo Principal (main.py)
@@ -36,6 +37,10 @@ class Game:
 		self.instanciar_fondo()
 		self.instanciar_marcadores()
 
+		self.presentacion = gameOver(self, int((self.settings.resolucion[0] / 2) / 2), self.settings.resolucion[1] / 2, 'Game Over', 70)
+		self.pulsaComenzar = gameOver(self, int((self.settings.resolucion[0] / 2) / 2), self.settings.resolucion[1] / 1.1, 'Pulse una tecla para jugar...', 28)
+		self.lista_textos.add(self.presentacion, self.pulsaComenzar)
+
 
 
 	def instanciar_fondo(self):
@@ -43,6 +48,13 @@ class Game:
 		for i in range(self.settings.filas):
 			for ii in range(self.settings.columnas):
 				self.matrizFondo.matriz[i][ii] = Fondo(self, ii, i)
+
+
+	def clear_matrizFondo(self):
+
+		for i in range(self.settings.filas):
+			for ii in range(self.settings.columnas):
+				self.matrizFondo.matriz[i][ii].valor = 0
 
 
 	def instanciar_marcadores(self):
@@ -107,7 +119,39 @@ class Game:
 		pygame.draw.rect(self.pantalla, (0, 0, 0), (0, 0, ancho, alto), 1)
 
 
+	def ir_al_gameOver(self):
 
+		self.settings.estado['gameOver'] = True
+		self.settings.estado['enJuego'] = False
+		self.settings.sonido['gameover'].play()
+		self.ultimo_update_rejugar = pygame.time.get_ticks()
+
+		self.presentacion = gameOver(self, int((self.settings.resolucion[0] / 2) / 2), self.settings.resolucion[1] / 2, 'Game Over', 70)
+		self.lista_textos.add(self.presentacion)
+
+
+	def txt_rejugar(self):
+
+		if self.settings.estado['gameOver']:
+			calculo = pygame.time.get_ticks()
+
+			if calculo - self.ultimo_update_rejugar > 5000:
+				self.ultimo_update = calculo
+				self.settings.estado['gameOver'] = False
+				self.settings.estado['menuPrincipal'] = True
+				self.pulsaComenzar = gameOver(self, int((self.settings.resolucion[0] / 2) / 2), self.settings.resolucion[1] / 1.1, 'Pulse una tecla para jugar...', 28)
+				self.lista_textos.add(self.pulsaComenzar)
+
+				self.clear_matrizFondo()
+				self.settings.lineas = 0
+				self.settings.nivel = 1
+				self.settings.gravedad = 1100
+
+				if self.settings.lineas > self.settings.record:
+					self.settings.record = self.settings.lineas
+
+
+	
 	def update(self):
 		pygame.display.set_caption(str(int(self.reloj.get_fps())))
 
@@ -115,6 +159,7 @@ class Game:
 		self.instanciar_pieza()
 
 		self.lista_textos.update()
+		self.txt_rejugar()
 
 		pygame.display.flip()
 		self.reloj.tick(self.settings.FPS)
@@ -149,10 +194,13 @@ class Game:
 					pygame.quit()
 					sys.exit()
 
-				elif event.key == pygame.K_RETURN and self.settings.estado['menuPrincipal']:
-					self.settings.estado.menuPrincipal = False
-					self.settings.estado.enJuego = True
-					#pygame.mixer.music.stop()
+				elif self.settings.estado['menuPrincipal']:
+					if event.key != pygame.K_UP:
+						self.settings.estado['menuPrincipal'] = False
+						self.settings.estado['enJuego'] = True
+						self.lista_textos.remove(self.pulsaComenzar, self.presentacion)
+						self.settings.sonido['click'].play()
+						#pygame.mixer.music.stop()
 
 				elif event.key == pygame.K_LEFT and self.settings.estado['enJuego']:
 					self.settings.controles['izquierda'] = True

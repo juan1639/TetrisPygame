@@ -29,12 +29,13 @@ class Settings:
 			'nivel': (255, 130, 47)
 		}
 
-		self.resolucion = (800, 620)
 		self.FPS = 60
 		self.tileX = 30
 		self.tileY = 30
 		self.columnas = 14
 		self.filas = 20
+		resX = (self.columnas * self.tileX) * 2
+		self.resolucion = (resX, 620)
 
 		self.xInicial = 7
 		self.yInicial = 2
@@ -50,7 +51,7 @@ class Settings:
 
 		self.lineas = 0
 		self.nivel = 1
-		self.record = 0
+		self.record = 27
 
 		self.controles = {
         	'izquierda': False,
@@ -61,8 +62,8 @@ class Settings:
 
 		self.estado = {
         	'running': True,
-        	'menuPrincipal': False,
-        	'enJuego': True,
+        	'menuPrincipal': True,
+        	'enJuego': False,
         	'entreNiveles': False,
         	'gameOver': False
         }

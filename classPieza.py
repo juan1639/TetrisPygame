@@ -64,8 +64,7 @@ class Pieza:
 				self.y -= 1
 
 				if self.y <= 2:
-					self.game.settings.estado['gameOver'] = True
-					self.game.settings.estado['enJuego'] = False
+					self.game.ir_al_gameOver()
 
 				self.game.settings.otraPieza = True
 				self.game.settings.checkeando_matriz = True
@@ -130,4 +129,5 @@ class Pieza:
 
 			rastro = self.game.matrizFondo.matriz[y][x]
 			rastro.valor = 9
+
 
