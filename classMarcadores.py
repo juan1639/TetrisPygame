@@ -1,7 +1,8 @@
 import pygame
+import random
 
 # ----------------------------------------------------------------
-# Módulo class Fondo.py 
+# Módulo class Marcadores.py 
 # 			
 # ----------------------------------------------------------------
 class Marcadores(pygame.sprite.Sprite):
@@ -35,5 +36,32 @@ class Marcadores(pygame.sprite.Sprite):
 
 		self.image = self.font.render(txtMarcador, True, self.color)
 
+
+class infoLineas(pygame.sprite.Sprite):
+	def __init__(self, game, cuantas):
+		super().__init__()
+		self.game = game 
+
+		self.x = int(self.game.settings.resolucion[0] / 4)
+		self.y = int(self.game.settings.resolucion[1] / 3.5)
+		self.cuantas = str(cuantas)
+		self.size = 60
+		self.color = (240, 240, 240)
+
+		self.font = pygame.font.SysFont('impact', self.size)
+		self.image = self.font.render('+ ' + self.cuantas, True, self.color)
+		self.rect = self.image.get_rect()
+		self.rect.topleft = (self.x, self.y)
+
+		self.ultimo_update = pygame.time.get_ticks()
+
+
+	def update(self):
+		self.color = (255, random.randrange(200) + 55, 0)
+		self.image = self.font.render('+ ' + self.cuantas, True, self.color)
+
+		calculo = pygame.time.get_ticks()
+		if calculo - self.ultimo_update > self.game.settings.tiempo_infoLineas:
+			self.kill()
 
 

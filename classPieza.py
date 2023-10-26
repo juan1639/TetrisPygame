@@ -36,6 +36,9 @@ class Pieza:
 
 	def actualiza(self):
 
+		if not self.game.settings.estado['enJuego']:
+			return
+
 		if self.game.settings.controles['izquierda']:
 
 			self.x -= 1
@@ -59,6 +62,11 @@ class Pieza:
 			self.y += 1
 			if self.check_colision():
 				self.y -= 1
+
+				if self.y <= 2:
+					self.game.settings.estado['gameOver'] = True
+					self.game.settings.estado['enJuego'] = False
+
 				self.game.settings.otraPieza = True
 				self.game.settings.checkeando_matriz = True
 				self.dejar_rastro()

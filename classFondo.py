@@ -37,11 +37,12 @@ class Fondo:
 		if not game.settings.checkeando_matriz:
 			return
 
+		lineas_alavez = 0
 		filas = game.settings.filas
 
 		for i in range(filas - 1, 0, -1):
 			matrizLinea = game.matrizFondo.matriz[i]
-
+			
 			hasta_cuatro = True
 
 			while (hasta_cuatro):
@@ -53,7 +54,10 @@ class Fondo:
 
 				if contador_cols == 14:
 					game.settings.lineas += 1
+					lineas_alavez += 1
 					game.settings.nivel = int(game.settings.lineas / 7) + 1
+					game.settings.sonido['linea'].play()
+					game.settings.sonido['linea'].set_volume(0.6)
 
 					if game.settings.gravedad > 100:
 						game.settings.gravedad -= game.settings.incremento_dificultad
@@ -65,5 +69,6 @@ class Fondo:
 					hasta_cuatro = False
 					break
 
+		game.instancia_infoLineas(lineas_alavez)
 		game.settings.checkeando_matriz = False
 

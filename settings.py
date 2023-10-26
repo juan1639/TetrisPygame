@@ -1,4 +1,5 @@
 import pygame
+import random
 
 # ----------------------------------------------------------------
 # Módulo Settings.py
@@ -37,10 +38,14 @@ class Settings:
 
 		self.xInicial = 7
 		self.yInicial = 2
+		self.xNext = 17
+		self.yNext = 16
 		self.piezas = 'zsljoit'
 		self.gravedad = 1100
 		self.incremento_dificultad = 10
 		self.checkeando_matriz = False
+		self.tiempo_infoLineas = 2000
+		self.next_pieza = random.randrange(len(self.piezas))
 		self.otraPieza = True
 
 		self.lineas = 0
@@ -66,6 +71,6 @@ class Settings:
 			'gameover': pygame.mixer.Sound("./sonidos/gameover.mp3"),
 			'click': pygame.mixer.Sound("./sonidos/click.mp3"),
 			'linea': pygame.mixer.Sound("./sonidos/disparo.mp3"),
-			'musica': pygame.mixer.Sound("./sonidos/assets_music.ogg")
+			'musica': pygame.mixer.music
 		}
 

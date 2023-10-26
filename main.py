@@ -6,7 +6,8 @@ from classPieza import Pieza
 from plantilla import Plantilla
 from matrizFondo import MatrizFondo
 from classFondo import Fondo
-from classMarcadores import Marcadores
+from classMarcadores import *
+from classNextpieza import nextPieza
 
 # ----------------------------------------------------------------
 # Módulo Principal (main.py)
@@ -28,6 +29,7 @@ class Game:
 
 		self.lista_textos = pygame.sprite.Group()
 
+		self.settings.sonido['musica'].load("./sonidos/assets_music.ogg")
 		self.settings.sonido['musica'].play(loops=-1)
 		self.settings.sonido['musica'].set_volume(0.6)
 
@@ -56,6 +58,13 @@ class Game:
 		self.lista_textos.add(lineas, record, nivel)
 
 
+	def instancia_infoLineas(self, lineas_alavez):
+
+		if lineas_alavez > 0:
+			infolineas = infoLineas(self, lineas_alavez)
+			self.lista_textos.add(infolineas)
+
+
 
 	def instanciar_pieza(self):
 
@@ -66,10 +75,16 @@ class Game:
 			piezas = self.settings.piezas
 			color = self.settings.colorPiezas
 
-			nro_rnd = random.randrange(len(piezas))
+			nro_rnd = self.settings.next_pieza
 			elegida = piezas[nro_rnd]
 			idPieza = self.plantilla.pieza[elegida]
 			coloresPieza = color[nro_rnd]
+
+			# Asignar aleatoriamente la 'Next Pieza' -----
+			nro_rnd = random.randrange(len(piezas))
+			self.settings.next_pieza = nro_rnd
+			self.verNext = nextPieza(self, self.settings.xNext, self.settings.yNext, self.plantilla.pieza[piezas[nro_rnd]], color[nro_rnd])
+			# --------------------------------------------
 
 			self.pieza = Pieza(self, x, y, idPieza, coloresPieza)
 			#return self.pieza
@@ -83,6 +98,13 @@ class Game:
 		for i in range(fila, 0, -1):
 			for ii in range(columnas):
 				self.matrizFondo.matriz[i][ii].valor = self.matrizFondo.matriz[i - 1][ii].valor
+
+
+	def dibuja_decorados_marcos(self):
+
+		ancho = self.settings.columnas * self.settings.tileX + 1
+		alto = self.settings.filas * self.settings.tileY + 1
+		pygame.draw.rect(self.pantalla, (0, 0, 0), (0, 0, ancho, alto), 1)
 
 
 
@@ -109,11 +131,10 @@ class Game:
 		if self.pieza:
 			self.pieza.dibuja()
 
-		self.lista_textos.draw(self.pantalla)
+		nextPieza.dibuja(self, self.verNext)
 
-		ancho = self.settings.columnas * self.settings.tileX + 1
-		alto = self.settings.filas * self.settings.tileY + 1
-		pygame.draw.rect(self.pantalla, (0, 0, 0), (0, 0, ancho, alto), 1)
+		self.lista_textos.draw(self.pantalla)
+		self.dibuja_decorados_marcos()
 	
 
 
